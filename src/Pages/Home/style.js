@@ -12,6 +12,11 @@ export const Moldura = styled.div`
     border-radius: 5px;
 `;
 
+export const DivCard = styled.div`
+padding-left: 700px;
+background-color: rgba(0,0,0,0.8);
+`;
+
 
 
 
