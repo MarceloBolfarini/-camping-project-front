@@ -1,16 +1,17 @@
 import axios from 'axios';
 
-export const base = 'https://jsonplaceholder.typicode.com'
+let token = "";
 
-export const api = {
-    getAllPosts: async () => {
-        const response = await axios.get(`${base}/posts`)
-        return response.data;
+if(localStorage.getItem('token') != undefined){
+    token = localStorage.getItem('token');
+} 
+
+export const baseURL = 'http://localhost:8080';
+
+export const api = axios.create({
+    headers: {
+        Authorization: token ? `Bearer ${token}` : '',
+        'Access-Control-Allow-Origin': '*',
     },
-    addnewPost: async(title, body, userId) => {
-        const response = await axios.post(`${base}/posts`, {
-            title, body, userId
-        });
-        return response.data
-    }
-}
+    baseURL,
+})

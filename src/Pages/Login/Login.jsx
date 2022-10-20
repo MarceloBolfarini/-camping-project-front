@@ -2,6 +2,8 @@ import { Grid } from '@mui/material';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
+import { api } from '../../api';
 import ButtonRegister from '../../Components/ButtonComponent';
 import TextFieldComponent from '../../Components/TextFieldComponent';
 import camp from '../../img/camp.png'
@@ -10,7 +12,7 @@ import { Button, ContainerPrincipal, Img, Input, TelaLogin, ButtonCadastrese, Ti
 
 function Login() {
 
-  const [form, setForm] = useState({ login: '', senha: '' });
+  const [form, setForm] = useState({ email: '', senha: '' });
   const [exibeLogin, setExibeLogin] = useState(true);
   const [continuar, setContinuar] = useState(false);
   const { control, handleSubmit, register, watch, setValue, setFocus } = useForm();
@@ -33,8 +35,38 @@ function Login() {
   })
 
   const handleSubmitLogin = (event) => {
-    event.preventDefault();
-    console.log(form);
+    login();
+    event?.preventDefault();
+  }
+
+  const login = async() => {
+    await api.post("/auth", form).then((response)=> {
+      localStorage.setItem("token", response.data.token)
+      console.log(response)
+    })
+  }
+
+  const handleSubmitCadastro = (event) => {
+    cadastrar(event);
+    event?.preventDefault();
+  }
+
+  const cadastrar = async(event) => {
+    setUsuario({ ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email, 
+    dataNascimento: event.dataNascimento, senha: event.senha, telefone: event.telefone, numero: event.numero})
+    console.log(usuario)
+    await api.post("/usuarios", usuario).then((response)=> {
+      console.log(response)
+      return (
+        Swal.fire({
+          icon: "success",
+          title: "Usuario Criado com Sucesso"
+        })
+      )
+      
+    }).catch(
+      err => console.log(err)
+    )
   }
 
   const buscaCep = () => {
@@ -57,7 +89,7 @@ function Login() {
             <h1>Login</h1>
             <br></br> <br></br>
             <form onSubmit={handleSubmitLogin}>
-              <Input type="text" placeholder="Usuario" name="usuario" onChange={(event) => setForm({ ...form, login: event.target.value })} value={form.login}></Input>
+              <Input type="text" placeholder="Usuario" name="usuario" onChange={(event) => setForm({ ...form, email: event.target.value })} value={form.email}></Input>
               <br></br> <br></br>
               <Input type="password" placeholder="Senha" name="senha" onChange={(event) => setForm({ ...form, senha: event.target.value })} value={form.senha}></Input>
               <br></br> <br></br>
@@ -68,6 +100,7 @@ function Login() {
         </TelaLogin>
       }
       { exibeLogin === false &&
+        <form onSubmit={handleSubmit(handleSubmitCadastro)}>
           <ContainerGrid container>
             <Grid item xs={12} >
               <Grid container >
@@ -335,7 +368,7 @@ function Login() {
                               <ButtonRegister
                                 variant="outlined"
                                 text="Continuar"
-                                onClick={()=>(true)}
+                                type="submit"
                                 disabled={!continuar}
                               />
                             </Grid>
@@ -353,6 +386,7 @@ function Login() {
 
             </Grid>
           </ContainerGrid>
+          </form>
       }
       
       <Img src={camp} alt="camp" ></Img>
