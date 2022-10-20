@@ -64,7 +64,7 @@ export const Input = styled.input`
   color: white;
   ::placeholder {
     color: white;
-    opacity: 0.7; 
+    opacity: 1; 
 };
 `
 export const Button = styled.button`
