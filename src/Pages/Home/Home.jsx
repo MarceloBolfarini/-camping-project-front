@@ -1,13 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-// import { useContext } from "react";
-// import { Context } from "../../Contexts/context"
-// import axios from "axios";
-// import { DivCard, Input, Moldura } from "./style";
-// import Card from '@mui/material/Card';
-// import CardContent from '@mui/material/CardContent';
-// import CardMedia from '@mui/material/CardMedia';
-// import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import Header from "../../Components/Header";
 import BackGroundPage from "../../Components/BackgroundPage";

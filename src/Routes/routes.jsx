@@ -7,6 +7,8 @@ import { RequireAuth } from "./RequireAuth.jsx";
 import { ContextProvider } from '../Contexts/context'
 import { ThemeProvider } from "@emotion/react";
 import theme from "../Components/Styles/Styles.js";
+import CadastroEvento from "../Pages/CadastroEvento/CadastroEvento.jsx";
+import GerenciarEventos from "../Pages/GerenciarEventos/GerenciarEventos.jsx";
 
 export const Rotas = () =>{
 
@@ -21,6 +23,8 @@ export const Rotas = () =>{
                                 <Home/>
                             </RequireAuth>
                         } />
+                        <Route path="/eventos/cadastrar" element={<CadastroEvento/>} />
+                        <Route path="/eventos/gerenciar" element={<GerenciarEventos/>} />
                         <Route path="*" element={<NotFound/>} />
                     </Routes>
                 </BrowserRouter>

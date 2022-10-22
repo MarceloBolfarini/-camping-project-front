@@ -23,6 +23,12 @@ export const TextFieldComponent = styled(TextFieldmui)`
         border-bottom: 1px solid white
     }
 
+    & .MuiFilledInput-root{
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+
+    
+
     //.MuiOutlinedInput-input, .MuiInputBase-input, .MuiSelect-select{
         //padding: 5px 30px 5px 10px !important;
         //height: 40px !important;
