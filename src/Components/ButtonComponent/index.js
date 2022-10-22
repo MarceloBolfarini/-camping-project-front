@@ -2,7 +2,7 @@
 
 import { ButtonRegister as Button } from "./styles";
 
-const ButtonRegister = ({ variant, disabled, onClick, text, color, type }) => {
+const ButtonRegister = ({ variant, disabled, onClick, text, color, type, bottaoCadEventos }) => {
 
     return (
         <Button
@@ -11,6 +11,7 @@ const ButtonRegister = ({ variant, disabled, onClick, text, color, type }) => {
             onClick={onClick}
             color={color}
             type={type}
+            bottaoCadEventos={bottaoCadEventos}
             
         >
         {text}
