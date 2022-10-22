@@ -1,22 +1,5 @@
 import styled from 'styled-components';
 
-// export const Input = styled.input`
-//     border-color: ${(props)=> props.color === true ? "blue" : "red"};
-//     border-radius: 6px;
-// `;
-
-// export const Moldura = styled.div`
-//     border: ${(props) => props.red === true && props.height === 1000 ? '1px solid red' : '1px solid black'};
-//     width: 100px;
-//     height: 100px;
-//     border-radius: 5px;
-// `;
-
-// export const DivCard = styled.div`
-// padding-left: 700px;
-// background-color: rgba(0,0,0,0.8);
-// `;
-
 export const Title = styled.h1`
     color: white;
     font-size: 30px;
@@ -43,5 +26,22 @@ export const DescriptionCard = styled.h3`
     font-weight: 300;
     width: 100%;
     left:0;
+`;
+
+export const SubTitleCard = styled.h2`
+    color: white;
+    font-weight: 400;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+`;
+
+export const SubDescriptionCard = styled.h3`
+    color: white;
+    font-weight: 300;
+    width: 100%;
+    margin-top: 3px;
+    font-size: 17px;
 `;
 
