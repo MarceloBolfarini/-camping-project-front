@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 export const Container = styled(Grid)`
     width: 100%;
-    height: 45.1vw;
+    height: calc(100vh - 60px);
     background: #282828;
     overflow: auto;
     max-width: 100vw;
