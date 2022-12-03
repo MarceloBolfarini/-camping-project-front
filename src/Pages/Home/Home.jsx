@@ -4,11 +4,31 @@ import BackGroundPage from "../../Components/BackgroundPage";
 import { DescriptionCard, Imagem, SubDescriptionCard, SubTitleCard, Title, TitleCard } from './style';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import ButtonRegister from '../../Components/ButtonComponent';
+import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import { Icon } from '@iconify/react';
+import { api } from '../../services/api';
 
 const Home = () => {
 
   const [eventos, setEventos] = useState([]);
   const [eventoSelecionado, setEventoSelecionado] = useState({});
+  const [usuario, setUsuario] = useState({});
+  const { isAuthenticated } = useSelector(state => state.auth)
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-end',
+    background: "#8e2748",
+    showConfirmButton: false,
+    timer: 5001,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
   const loadEvents = async () => (
     await axios.get('http://localhost:8080/eventos', {})
@@ -18,14 +38,78 @@ const Home = () => {
       }).catch(console.log)
   )
 
+  const inscreverse = async () => (
+    await api.put(`/eventos/inscricao/evento/${eventoSelecionado.id}/usuario/${usuario.id}`, {})
+      .then((response)=>{
+        console.log(response)
+        return (
+          Swal.fire({
+            icon: "success",
+            title: "Você se inscreveu com sucesso no Acampamento: "+ eventoSelecionado.titulo,
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown' 
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+          })
+        )
+      }).catch(err => {
+        console.log(err)
+        return (
+          Swal.fire({
+            icon: "error",
+            title: "Você já está inscrito nesse Acampamento",
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown' 
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+          })
+        )
+      })
+  )
+
   useEffect(async () => {
     await loadEvents();
     console.log(eventos)
+    setUsuario(JSON.parse(localStorage.getItem('usuario')));
+    console.log(usuario);
+    if(isAuthenticated){
+      return(
+        Toast.fire({
+          icon: 'success',
+          title: 'você está autenticado',
+          color: "white",
+          iconColor: "#FFFFFF"
+        })
+      )
+    }
   }, [])
 
-  useEffect(async () => {
-    console.log(eventoSelecionado)
-  }, [eventoSelecionado])
+  const openModal = async() => {
+   return Swal.fire({
+      title: 'Você está se inscrevendo no evento',
+      text: eventoSelecionado.titulo,
+      color: "white",
+      showCancelButton: true,
+      style: "&.swal2-styled.swal2-confirm {background: white !important}",
+      confirmButtonText: "confirmar",
+      cancelButtonColor: "#313131",
+      cancelButtonText: "cancelar",
+      background: "#414141",
+      border: "1px solid #FFFFFF",
+      customClass: {
+        confirmButton: 'btn-class' //insert class here
+      }
+
+  }).then((result) => {
+      if(result.isConfirmed){
+        inscreverse()
+      }
+  })
+  }
 
   return (
     <>
@@ -33,6 +117,16 @@ const Home = () => {
       <BackGroundPage page={
         <Grid container justifyContent="center">
           <Grid item xs={4} style={{ display: "flex", marginTop: 10 }} justifyContent="center">
+            { eventoSelecionado.id &&  
+            <Grid position="absolute" left="16%" top="12.5%" onClick={ ()=>setEventoSelecionado({}) } style={{ cursor: "pointer"  }}>
+              <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
+            </Grid> 
+            }
+            { (usuario.nivelAcesso == 0 && eventoSelecionado.id == undefined) &&  
+            <Grid position="absolute" right="16%" top="12.5%" onClick={()=> window.location.pathname = "/eventos/cadastrar"} style={{cursor: "pointer"}}>
+              <Icon icon="carbon:add-alt" color="white" fontSize={40} style />
+            </Grid> 
+            }
             <Title>{eventoSelecionado.titulo == undefined ? "Eventos" : eventoSelecionado.titulo}</Title>
           </Grid>
 
@@ -129,6 +223,15 @@ const Home = () => {
                     </Grid>
                     
 
+                  </Grid>
+                  <Grid item xs={12} style={{display: "flex", justifyContent:"center", marginTop: 30}}>
+                    <ButtonRegister
+                      variant="outlined"
+                      text="Inscreva-se"
+                      type="submit"
+                      bottaoCadEventos
+                      onClick={openModal}
+                    />
                   </Grid>
                 </Grid>
               </Grid>

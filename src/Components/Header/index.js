@@ -1,14 +1,29 @@
 import { Icon } from "@iconify/react/dist/iconify";
 import { Grid } from "@mui/material"
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Container, ItemsMenu } from "./styles";
+import logoutService from '../../services/logout.service'
 
 const Header = () => {
 
     const [userAdmin, setUserAdmin] = useState();
 
+    const { isAuthenticated } = useSelector(state => state.auth )
+    const dispatch = useDispatch()
+
+    function authLogoutButton() {
+        isAuthenticated && dispatch(logoutService());
+    }
+
     useEffect(()=>{
-        setUserAdmin(false)
+        let usuario = JSON.parse(localStorage.getItem("usuario"));
+        if(usuario.nivelAcesso == 0){
+            setUserAdmin(true)
+        } else {
+            setUserAdmin(false)
+        }
+        
     },[])
 
     return (
@@ -23,6 +38,7 @@ const Header = () => {
                                     fontSize={35}
                                     color="white"
                                     cursor="pointer"
+                                    onClick={()=>window.location.pathname = "/home"}
                                 />
                             </Grid>
 
@@ -33,15 +49,15 @@ const Header = () => {
                     <Grid item xs={8}>
                         <Grid container>
                             <Grid item xs={2} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
-                                <ItemsMenu>Eventos</ItemsMenu>
+                                <ItemsMenu onClick={()=>window.location.pathname = "/home"}>Eventos</ItemsMenu>
                             </Grid>
-                            <Grid item xs={3} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
-                                <ItemsMenu>Gerenciar Eventos</ItemsMenu>
+                            <Grid item xs={2} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
+                                <ItemsMenu onClick={()=>window.location.pathname = "/eventos/meusEventos"}>Meus Eventos</ItemsMenu>
                             </Grid>
                             { userAdmin &&
-                                <Grid item xs={3} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
-                                    <ItemsMenu>Gerenciar Evento</ItemsMenu>
-                                </Grid>
+                            <Grid item xs={3} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
+                                <ItemsMenu onClick={()=>window.location.pathname = "/eventos/gerenciar"}>Gerenciar Evento</ItemsMenu>
+                            </Grid>
                             }
                         </Grid>
                     </Grid>
@@ -56,6 +72,7 @@ const Header = () => {
                                     fontSize={35}
                                     color="white"
                                     cursor="pointer"
+                                    onClick={authLogoutButton}
                                 />
                             </Grid>
 

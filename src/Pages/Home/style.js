@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 export const Title = styled.h1`
     color: white;
