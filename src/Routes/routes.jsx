@@ -18,15 +18,11 @@ export const Rotas = () =>{
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Login/>} />
-                        <Route path="/home" element={
-                            <RequireAuth>
-                                <Home/>
-                            </RequireAuth>
-                        } />
-                        <Route path="/eventos/cadastrar" element={<CadastroEvento/>} />
-                        <Route path="/eventos/editar/:id" element={<CadastroEvento/>} />
-                        <Route path="/eventos/gerenciar" element={<GerenciarEventos/>} />
-                        <Route path="/eventos/meusEventos" element={<MeusEventos/>} />
+                        <Route path="/home" element={<RequireAuth><Home/></RequireAuth>} />
+                        <Route path="/eventos/cadastrar" element={<RequireAuth><CadastroEvento/></RequireAuth>} />
+                        <Route path="/eventos/editar/:id" element={<RequireAuth><CadastroEvento/></RequireAuth>} />
+                        <Route path="/eventos/gerenciar" element={<RequireAuth><GerenciarEventos/></RequireAuth>} />
+                        <Route path="/eventos/meusEventos" element={<RequireAuth><MeusEventos/></RequireAuth>} />
                         <Route path="*" element={<NotFound/>} />
                     </Routes>
                 </BrowserRouter>

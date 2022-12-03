@@ -100,12 +100,7 @@ function MeusEventos (){
             <Grid position="absolute" left="16%" top="12.5%" onClick={ ()=>setEventoSelecionado({}) } style={{ cursor: "pointer"  }}>
               <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
             </Grid> 
-            }
-            { (usuario.nivelAcesso == 0 && eventoSelecionado.id != true) &&  
-            <Grid position="absolute" right="16%" top="12.5%" onClick={()=> window.location.pathname = "/eventos/cadastrar"} style={{cursor: "pointer"}}>
-              <Icon icon="carbon:add-alt" color="white" fontSize={40} style />
-            </Grid> 
-            }
+            }       
             <Title>{eventoSelecionado.titulo == undefined ? "Meus Eventos" : eventoSelecionado.titulo}</Title>
           </Grid>
 
