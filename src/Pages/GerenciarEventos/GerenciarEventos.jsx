@@ -18,6 +18,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { api } from '../../services/api';
 
 const StyledTableCell = styled(TableCell)(({}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -72,6 +74,60 @@ const GerenciarEventos = () => {
         console.log(eventos)
     },[])
 
+    const excluirEvento = async(id) =>{
+      await api.delete("/eventos/"+id).then((res)=>{
+        loadEvents();
+        console.log(res)
+        Swal.fire({
+          icon: "success",
+          title: "Acampamento deletado com sucesso",
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        })
+      }).catch((res)=>{
+        console.log(res)
+        Swal.fire({
+          icon: "error",
+          title: "ocorreu algum erro",
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        })
+      })
+    }
+
+    const openModal = async(id, titulo) => {
+      return Swal.fire({
+         title: titulo ? titulo: "Acampamento Selecionado",
+         color: "white",
+         showCancelButton: true,
+         style: "&.swal2-styled.swal2-confirm {background: white !important}",
+         confirmButtonText: "Excluir",
+         cancelButtonColor: "#313131",
+         cancelButtonText: "Alterar",
+         background: "#414141",
+         border: "1px solid #FFFFFF",
+         customClass: {
+           confirmButton: 'btn-class' //insert class here
+         }
+   
+     }).then((result) => {
+         if(result.isConfirmed){
+            excluirEvento(id)
+         }
+         if(result.dismiss){
+            window.location.pathname = "/eventos/editar/"+id
+         }
+     })
+     }
+
 
   return (
     <>
@@ -100,12 +156,12 @@ const GerenciarEventos = () => {
                     <TableBody>
                       {eventos.map((evento) => 
                         <StyledTableRow key={evento?.id}>
-                          <StyledTableCell component="th" scope="row">{evento?.titulo}</StyledTableCell>
-                          <StyledTableCell align="right">{evento?.local}</StyledTableCell>
-                          <StyledTableCell align="right">{evento?.dataAbertura}</StyledTableCell>
-                          <StyledTableCell align="right">{evento?.dataEncerramento}</StyledTableCell>
-                          <StyledTableCell align="right">{evento?.taxaInscricao}</StyledTableCell>
-                          <StyledTableCell align="right">{evento?.inscritos.length}</StyledTableCell>
+                          <StyledTableCell component="th" scope="row" onClick={()=>openModal(evento.id, evento.titulo)}>{evento?.titulo}</StyledTableCell>
+                          <StyledTableCell align="right" onClick={()=>openModal(evento.id, evento.titulo)}>{evento?.local}</StyledTableCell>
+                          <StyledTableCell align="right" onClick={()=>openModal(evento.id, evento.titulo)}>{evento?.dataAbertura}</StyledTableCell>
+                          <StyledTableCell align="right" onClick={()=>openModal(evento.id, evento.titulo)}>{evento?.dataEncerramento}</StyledTableCell>
+                          <StyledTableCell align="right" onClick={()=>openModal(evento.id, evento.titulo)}>{evento?.taxaInscricao}</StyledTableCell>
+                          <StyledTableCell align="right" onClick={()=>openModal(evento.id, evento.titulo)}>{evento?.inscritos.length}</StyledTableCell>
                         </StyledTableRow>
                       )}
                     </TableBody>

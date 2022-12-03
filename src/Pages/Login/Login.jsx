@@ -1,22 +1,24 @@
 import { Grid } from '@mui/material';
 import React, { useState } from 'react'
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
-import { api } from '../../api';
+import { api } from '../../services/api';
 import ButtonRegister from '../../Components/ButtonComponent';
 import TextFieldComponent from '../../Components/TextFieldComponent';
 import camp from '../../img/camp.png'
 import { Button, ContainerPrincipal, Img, Input, TelaLogin, ButtonCadastrese, TituloCadastro, ContainerGrid, SubTituloCadastro } from './style';
-
+import { useDispatch } from 'react-redux';
+import { authLogin } from '../../store/fetchActions';
 
 function Login() {
 
   const [form, setForm] = useState({ email: '', senha: '' });
   const [exibeLogin, setExibeLogin] = useState(true);
   const [continuar, setContinuar] = useState(false);
-  const { control, handleSubmit, register, watch, setValue, setFocus } = useForm();
+  const { control, handleSubmit, watch, setValue, setFocus } = useForm();
   const [cep] =  watch(['cep']);
+  
+  const dispatch = useDispatch()
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -40,32 +42,45 @@ function Login() {
   }
 
   const login = async() => {
-    await api.post("/auth", form).then((response)=> {
-      localStorage.setItem("token", response.data.token)
-      console.log(response)
-    })
+    // await api.post("/auth", form).then((response)=> {
+    //   localStorage.setItem("token", response.data.token)
+    //   console.log(response)
+    // })
+    dispatch(authLogin(form))
   }
 
-  const handleSubmitCadastro = (event) => {
-    cadastrar(event);
+  const handleSubmitCadastro = async (event) => {
+    await cadastrar(event);
     event?.preventDefault();
   }
 
   const cadastrar = async(event) => {
+    let dataSplit = event.dataNascimento.split("/")
+    let dataForm = dataSplit[2] + "-" + dataSplit[1] + "-" + dataSplit[0]
     setUsuario({ ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email, 
-    dataNascimento: event.dataNascimento, senha: event.senha, telefone: event.telefone, numero: event.numero})
+    dataNascimento: dataForm, senha: event.senha, telefone: event.telefone, numero: event.numero})
     console.log(usuario)
     await api.post("/usuarios", usuario).then((response)=> {
+      setUsuario({});
       console.log(response)
       return (
         Swal.fire({
           icon: "success",
-          title: "Usuario Criado com Sucesso"
+          title: "Usuario criado com sucesso",
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
         })
       )
       
     }).catch(
-      err => console.log(err)
+      Swal.fire({
+        icon: "error",
+        title: "Ocorreu um erro"
+      })
     )
   }
 
@@ -73,8 +88,8 @@ function Login() {
     fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json()).then(data => {
         console.log(data)
         setUsuario({ ...usuario, bairro: data.bairro, cep: data.cep, cidade: data.localidade, estado: data.uf, rua: data.logradouro })
-        setValue("cidade", data.localidade)
-;        setValue("bairro", data.bairro);
+        setValue("cidade", data.localidade);        
+        setValue("bairro", data.bairro);
         setValue("estado", data.uf);
         setValue("rua", data.logradouro);
         setFocus("numero");
@@ -132,6 +147,8 @@ function Login() {
                             label="Nome"
                             fullWidth
                             disabled={continuar}
+                            inputMask={{ mask: '', }}
+                            
                           />
                         </Grid>
                         <Grid item xs={4.5}>
@@ -178,6 +195,7 @@ function Login() {
                             name="dataNascimento"
                             fullWidth
                             disabled={continuar}
+                            inputMask={{ mask: '99/99/9999', maskChar: "", alwaysShowMask: false }}
                           />
                         </Grid>
                         <Grid item xs={4.5}>
@@ -190,6 +208,7 @@ function Login() {
                             label="CPF"
                             fullWidth
                             disabled={continuar}
+                            inputMask={{ mask: '999.999.999-99', maskChar: "", alwaysShowMask: false }}
                           />
                         </Grid>
                       </Grid>
@@ -224,6 +243,7 @@ function Login() {
                             label="Telefone"
                             fullWidth
                             disabled={continuar}
+                            inputMask={{ mask: '(99) 99999-9999', maskChar: "", alwaysShowMask: false }}
                           />
                         </Grid>
                       </Grid>
@@ -335,6 +355,7 @@ function Login() {
                             label="Numero"
                             fullWidth
                             disabled={!continuar}
+                            inputMask={{ mask: '99999', maskChar: "", alwaysShowMask: false }}
                           />
                         </Grid>
                         <Grid item xs={7}>
