@@ -35,8 +35,8 @@ const Header = () => {
                             <Grid item xs={2} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
                                 <ItemsMenu>Eventos</ItemsMenu>
                             </Grid>
-                            <Grid item xs={2} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
-                                <ItemsMenu>Meus Eventos</ItemsMenu>
+                            <Grid item xs={3} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
+                                <ItemsMenu>Gerenciar Eventos</ItemsMenu>
                             </Grid>
                             { userAdmin &&
                                 <Grid item xs={3} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>

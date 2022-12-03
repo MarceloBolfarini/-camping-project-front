@@ -80,12 +80,11 @@ const CadastroEvento = () => {
                 </Grid>
 
                 <br></br>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{color:"white"}}>
                   <InputTitle>Descrição</InputTitle>
                   <TextFieldComponent
-                    id="standard-basic"
+                    id="filled-multiline-static"
                     variant="filled"
-                    defaultValue={""}
                     name="descricao"
                     control={control}
                     multiline
