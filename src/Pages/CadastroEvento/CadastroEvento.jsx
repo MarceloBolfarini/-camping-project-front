@@ -23,10 +23,7 @@ export const CadastroEvento = ({}) => {
   const { control, handleSubmit, register, watch, setValue, setFocus } = useForm();
   const ref = useRef(null)
   const [file, setFile] = useState({})
-  const [evento, setEvento] = useState({})
-
-  if(window.location.href === "http://localhost:3000/eventos/cadastrar"){
-    setEvento({
+  const [evento, setEvento] = useState({
       titulo: "",
       dataAbertura: "",
       dataEncerramento: "",
@@ -35,9 +32,10 @@ export const CadastroEvento = ({}) => {
       taxaInscricao: "",
       idadeMinima: "",
       caminhoImagem: ""
-    })
-  }else{
-    api.get("eventos/"+id).then((res)=>{
+  })
+
+  useEffect(async()=>{
+    await api.get("/eventos/"+id).then((res)=>{
       console.log(res)
       setEvento({
         titulo: res.data.titulo,
@@ -47,12 +45,11 @@ export const CadastroEvento = ({}) => {
         descricao: res.data.descricao,
         taxaInscricao: res.data.taxaInscricao,
         idadeMinima: res.data.idadeMinima,
-        caminhoImagem: res.data.caminhoImagem
       })
     })
-    console.log(evento)
-    
-  }
+  },[])
+  console.log(evento)
+
 
   const cadastrar = async (event) => {
 
