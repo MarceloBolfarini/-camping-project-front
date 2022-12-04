@@ -76,7 +76,7 @@ const Home = () => {
     console.log(eventos)
     setUsuario(JSON.parse(localStorage.getItem('usuario')));
     console.log(usuario);
-    if(isAuthenticated){
+    if(isAuthenticated && localStorage.getItem("autenticado") == 0){
       return(
         Toast.fire({
           icon: 'success',
@@ -84,7 +84,8 @@ const Home = () => {
           color: "white",
           iconColor: "#FFFFFF"
         })
-      )
+      ),
+      localStorage.setItem("autenticado", 1)
     }
   }, [])
 

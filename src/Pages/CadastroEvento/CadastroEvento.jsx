@@ -23,20 +23,23 @@ export const CadastroEvento = ({}) => {
   const { control, handleSubmit, register, watch, setValue, setFocus } = useForm();
   const ref = useRef(null)
   const [file, setFile] = useState({})
-  const [evento, setEvento] = useState({
-    titulo: "",
-    dataAbertura: "",
-    dataEncerramento: "",
-    local: "",
-    descricao: "",
-    taxaInscricao: "",
-    idadeMinima: "",
-  })
+  const [evento, setEvento] = useState({})
 
-  useEffect(async()=>{
-    await api.get("/eventos/"+id).then((res)=>{
+  if(window.location.href === "http://localhost:3000/eventos/cadastrar"){
+    setEvento({
+      titulo: "",
+      dataAbertura: "",
+      dataEncerramento: "",
+      local: "",
+      descricao: "",
+      taxaInscricao: "",
+      idadeMinima: "",
+      caminhoImagem: ""
+    })
+  }else{
+    api.get("eventos/"+id).then((res)=>{
       console.log(res)
-      setEvento({ ...evento,
+      setEvento({
         titulo: res.data.titulo,
         dataAbertura: res.data.dataAbertura,
         dataEncerramento: res.data.dataEncerramento,
@@ -44,23 +47,28 @@ export const CadastroEvento = ({}) => {
         descricao: res.data.descricao,
         taxaInscricao: res.data.taxaInscricao,
         idadeMinima: res.data.idadeMinima,
+        caminhoImagem: res.data.caminhoImagem
       })
     })
-  },[])
+    console.log(evento)
+    
+  }
 
   const cadastrar = async (event) => {
 
     event.preventDefault();
 
-    let formData = new FormData()
-    formData.append("file", file)
-    await api.post("/eventos/salvarImagem", formData ,{
-      headers: {
-        "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
-      }
-    })
-    .then((res) => { console.log(res); })
-    .catch((err) => { console.log(err); });
+    if(file != {}){
+      let formData = new FormData()
+      formData.append("file", file)
+      await api.post("/eventos/salvarImagem", formData ,{
+        headers: {
+          "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
+        }
+      })
+      .then((res) => { console.log(res); })
+      .catch((err) => { console.log(err); });
+    }
 
     let dataAbertura = event.dataAbertura.split("/");
     dataAbertura = dataAbertura[2] + "-" + dataAbertura[1] + "-" + dataAbertura[0]
@@ -78,26 +86,51 @@ export const CadastroEvento = ({}) => {
       descricao: event.descricao,
       taxaInscricao: event.taxaInsricao,
       idadeMinima: event.idadeMinima,
+      caminhoImagem: evento.caminhoImagem
     })
 
-    await api.post("eventos", evento).then((res)=>{
-      Swal.fire({
-        icon: "success",
-        title: "Acampamento criado com sucesso",
-        showClass: {
-          popup: 'animate__animated animate__fadeInDown'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__fadeOutUp'
-        }
+    if(window.location.href === "http://localhost:3000/eventos/cadastrar"){
+
+      await api.post("eventos", evento).then((res)=>{
+        Swal.fire({
+          icon: "success",
+          title: "Acampamento criado com sucesso",
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        })
+      }).catch((err)=>{
+        Swal.fire({
+          icon: "error",
+          title: "Ocorreu um erro"
+        }) 
+        console.log(err)
       })
-    }).catch((err)=>{
-      Swal.fire({
-        icon: "error",
-        title: "Ocorreu um erro"
-      }) 
-      console.log(err)
-    })
+
+    }else{
+
+      await api.put("eventos/"+id, evento).then((res)=>{
+        Swal.fire({
+          icon: "success",
+          title: "Acampamento alterado com sucesso",
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        })
+      }).catch((err)=>{
+        Swal.fire({
+          icon: "error",
+          title: "Ocorreu um erro"
+        }) 
+        console.log(err)
+      })
+    }
   }
 
 
@@ -106,8 +139,13 @@ export const CadastroEvento = ({}) => {
       <Header></Header>
       <BackGroundPage page={
         <Grid container justifyContent="center">
-          <Grid item xs={4} style={{ display: "flex", marginTop: 40 }} justifyContent="center">
-            <Title>Cadastro de Eventos</Title>
+           <Grid item xs={4} style={{ display: "flex", marginTop: 10 }} justifyContent="center">
+            
+            <Grid position="absolute" left="16%" top="12.5%" onClick={ ()=>{window.history.back()} } style={{ cursor: "pointer"  }}>
+              <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
+            </Grid> 
+              
+            <Title>{window.location.href === "http://localhost:3000/eventos/cadastrar" ? "Cadastrar Evento" : "Alterar Evento"}</Title>
           </Grid>
 
           <Grid item xs={12} style={{ margin: "0 auto" }}>
@@ -223,7 +261,7 @@ export const CadastroEvento = ({}) => {
                   <Grid item xs={2} style={{ margin: "45px 20px 0px 0px", paddingBottom: "10%" }}>
                     <ButtonRegister
                       variant="outlined"
-                      text="Cadastrar"
+                      text={window.location.href === "http://localhost:3000/eventos/cadastrar" ? "Cadastrar" : "Salvar"}
                       type="submit"
                       bottaoCadEventos
                       onClick={cadastrar}

@@ -9,6 +9,7 @@ export const authLogin = (user) => {
             .then(res =>{
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('usuario', JSON.stringify(res.data.usuario));
+                localStorage.setItem('autenticado', 0);
                 dispatch(login());
                 window.location.pathname = '/home'                
             })
