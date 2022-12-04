@@ -9,6 +9,7 @@ import theme from "../Components/Styles/Styles.js";
 import CadastroEvento from "../Pages/CadastroEvento/CadastroEvento.jsx";
 import GerenciarEventos from "../Pages/GerenciarEventos/GerenciarEventos.jsx";
 import MeusEventos from "../Pages/MeusEventos/MeusEventos.jsx";
+import ListaInscritos from "../Pages/ListaInscritos/ListaInscritos.jsx";
 
 
 export const Rotas = () =>{
@@ -23,6 +24,7 @@ export const Rotas = () =>{
                         <Route path="/eventos/editar/:id" element={<RequireAuth><CadastroEvento/></RequireAuth>} />
                         <Route path="/eventos/gerenciar" element={<RequireAuth><GerenciarEventos/></RequireAuth>} />
                         <Route path="/eventos/meusEventos" element={<RequireAuth><MeusEventos/></RequireAuth>} />
+                        <Route path="/eventos/gerenciar/lista/:id" element={<RequireAuth><ListaInscritos/></RequireAuth>} />
                         <Route path="*" element={<NotFound/>} />
                     </Routes>
                 </BrowserRouter>
