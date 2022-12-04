@@ -33,6 +33,7 @@ export const CadastroEvento = ({}) => {
       idadeMinima: "",
       caminhoImagem: ""
   })
+  const [loading, setLoading] = useState(true)
 
   useEffect(async()=>{
     await api.get("/eventos/"+id).then((res)=>{
@@ -47,13 +48,12 @@ export const CadastroEvento = ({}) => {
         idadeMinima: res.data.idadeMinima,
       })
     })
+    setLoading(false)
   },[])
-  console.log(evento)
-
 
   const cadastrar = async (event) => {
 
-    event.preventDefault();
+    console.log(event)
 
     if(file != {}){
       let formData = new FormData()
@@ -63,32 +63,21 @@ export const CadastroEvento = ({}) => {
           "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
         }
       })
-      .then((res) => { console.log(res); })
-      .catch((err) => { console.log(err); });
+      .then((res) => { })
+      .catch((err) => { });
     }
 
-    let dataAbertura = event.dataAbertura.split("/");
+    let dataAbertura = event?.dataAbertura.split("/");
     dataAbertura = dataAbertura[2] + "-" + dataAbertura[1] + "-" + dataAbertura[0]
 
     let dataEncerramento = event.dataEncerramento.split("/");
     dataEncerramento = dataEncerramento[2] + "-" + dataEncerramento[1] + "-" + dataEncerramento[0]
-    console.log(dataAbertura)
-    console.log(dataEncerramento)
 
-    setEvento({
-      titulo: event.titulo,
-      dataAbertura: dataAbertura,
-      dataEncerramento: dataEncerramento,
-      local: event.local,
-      descricao: event.descricao,
-      taxaInscricao: event.taxaInsricao,
-      idadeMinima: event.idadeMinima,
-      caminhoImagem: evento.caminhoImagem
-    })
+    let parsedvalue = {...event, dataAbertura, dataEncerramento}
 
-    if(window.location.href === "http://localhost:3000/eventos/cadastrar"){
+    if(!id){
 
-      await api.post("eventos", evento).then((res)=>{
+      await api.post("eventos", parsedvalue).then((res)=>{
         Swal.fire({
           icon: "success",
           title: "Acampamento criado com sucesso",
@@ -109,7 +98,7 @@ export const CadastroEvento = ({}) => {
 
     }else{
 
-      await api.put("eventos/"+id, evento).then((res)=>{
+      await api.put("eventos/"+id, parsedvalue).then((res)=>{
         Swal.fire({
           icon: "success",
           title: "Acampamento alterado com sucesso",
@@ -144,7 +133,7 @@ export const CadastroEvento = ({}) => {
               
             <Title>{window.location.href === "http://localhost:3000/eventos/cadastrar" ? "Cadastrar Evento" : "Alterar Evento"}</Title>
           </Grid>
-
+          { loading ? "" : (
           <Grid item xs={12} style={{ margin: "0 auto" }}>
             <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
               <Grid item xs={6}>
@@ -269,7 +258,7 @@ export const CadastroEvento = ({}) => {
               </Grid>
             </Grid>
           </Grid>
-
+          )}
         </Grid>
       }></BackGroundPage>
     </>
