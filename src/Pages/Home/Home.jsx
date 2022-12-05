@@ -77,7 +77,8 @@ const Home = () => {
     console.log(eventos)
     setUsuario(JSON.parse(localStorage.getItem('usuario')));
     console.log(usuario);
-    if(isAuthenticated){
+    if(isAuthenticated && localStorage.getItem("autenticado") == 0){
+      localStorage.setItem("autenticado", 1)
       return(
         Toast.fire({
           icon: 'success',
@@ -88,8 +89,9 @@ const Home = () => {
       )
     }
     setLoading(false)
+    
   }, [])
-
+ 
   const openModal = async() => {
    return Swal.fire({
       title: 'Você está se inscrevendo no evento',
