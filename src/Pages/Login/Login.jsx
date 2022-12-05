@@ -9,6 +9,7 @@ import camp from '../../img/camp.png'
 import { Button, ContainerPrincipal, Img, Input, TelaLogin, ButtonCadastrese, TituloCadastro, ContainerGrid, SubTituloCadastro } from './style';
 import { useDispatch } from 'react-redux';
 import { authLogin } from '../../store/fetchActions';
+import { Icon } from '@iconify/react';
 
 function Login() {
 
@@ -16,8 +17,8 @@ function Login() {
   const [exibeLogin, setExibeLogin] = useState(true);
   const [continuar, setContinuar] = useState(false);
   const { control, handleSubmit, watch, setValue, setFocus } = useForm();
-  const [cep] =  watch(['cep']);
-  
+  const [cep] = watch(['cep']);
+
   const dispatch = useDispatch()
 
   const [usuario, setUsuario] = useState({
@@ -29,11 +30,11 @@ function Login() {
     senha: "",
     telefone: "",
     cidade: "",
-	  estado: "",
-	  rua: "",
-	  numero:"",
-	  bairro:"",
-	  cep:"",
+    estado: "",
+    rua: "",
+    numero: "",
+    bairro: "",
+    cep: "",
   })
 
   const handleSubmitLogin = (event) => {
@@ -41,7 +42,7 @@ function Login() {
     event?.preventDefault();
   }
 
-  const login = async() => {
+  const login = async () => {
     // await api.post("/auth", form).then((response)=> {
     //   localStorage.setItem("token", response.data.token)
     //   console.log(response)
@@ -54,13 +55,15 @@ function Login() {
     event?.preventDefault();
   }
 
-  const cadastrar = async(event) => {
+  const cadastrar = async (event) => {
     let dataSplit = event.dataNascimento.split("/")
     let dataForm = dataSplit[2] + "-" + dataSplit[1] + "-" + dataSplit[0]
-    setUsuario({ ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email, 
-    dataNascimento: dataForm, senha: event.senha, telefone: event.telefone, numero: event.numero})
+    setUsuario({
+      ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email,
+      dataNascimento: dataForm, senha: event.senha, telefone: event.telefone, numero: event.numero
+    })
     console.log(usuario)
-    await api.post("/usuarios", usuario).then((response)=> {
+    await api.post("/usuarios", usuario).then((response) => {
       setUsuario({});
       console.log(response)
       return (
@@ -75,7 +78,7 @@ function Login() {
           }
         })
       )
-      
+
     }).catch(
       Swal.fire({
         icon: "error",
@@ -86,19 +89,19 @@ function Login() {
 
   const buscaCep = () => {
     fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json()).then(data => {
-        console.log(data)
-        setUsuario({ ...usuario, bairro: data.bairro, cep: data.cep, cidade: data.localidade, estado: data.uf, rua: data.logradouro })
-        setValue("cidade", data.localidade);        
-        setValue("bairro", data.bairro);
-        setValue("estado", data.uf);
-        setValue("rua", data.logradouro);
-        setFocus("numero");
+      console.log(data)
+      setUsuario({ ...usuario, bairro: data.bairro, cep: data.cep, cidade: data.localidade, estado: data.uf, rua: data.logradouro })
+      setValue("cidade", data.localidade);
+      setValue("bairro", data.bairro);
+      setValue("estado", data.uf);
+      setValue("rua", data.logradouro);
+      setFocus("numero");
     });
   }
 
   return (
     <ContainerPrincipal>
-      { exibeLogin &&
+      {exibeLogin &&
         <TelaLogin>
           <div>
             <h1>Login</h1>
@@ -109,36 +112,41 @@ function Login() {
               <Input type="password" placeholder="Senha" name="senha" onChange={(event) => setForm({ ...form, senha: event.target.value })} value={form.senha}></Input>
               <br></br> <br></br>
               <Button>Enviar</Button>
-              <div style={{marginTop: 50}}><ButtonCadastrese onClick={()=>setExibeLogin(false)}>Cadastre-se</ButtonCadastrese></div>
+              <div style={{ marginTop: 50 }}><ButtonCadastrese onClick={() => setExibeLogin(false)}>Cadastre-se</ButtonCadastrese></div>
             </form>
           </div>
         </TelaLogin>
       }
-      { exibeLogin === false &&
+      {exibeLogin === false &&
+
         <form onSubmit={handleSubmit(handleSubmitCadastro)}>
+
           <ContainerGrid container>
+            <Grid position="absolute" left="3%" top="4%" onClick={() => { window.history.back() }} style={{ cursor: "pointer" }}>
+              <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
+            </Grid>
             <Grid item xs={12} >
               <Grid container >
-                <Grid item xs={1.2} style={{margin: "0 auto"}}>
+                <Grid item xs={1.2} style={{ margin: "0 auto" }}>
                   <TituloCadastro>Cadastro</TituloCadastro>
                 </Grid>
               </Grid>
-              
+
               <Grid container>
 
                 <Grid item xs={5.95} >
                   <Grid container>
                     <Grid item xs={12}>
-                      <Grid container style={{justifyContent: "center"}}>
+                      <Grid container style={{ justifyContent: "center" }}>
                         <Grid item>
                           <SubTituloCadastro>Dados Pessoais</SubTituloCadastro>
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item xs={12} style={{margin: "0 auto"}}>
-                      <Grid container justifyContent="space-around" style={{margin: "0 auto"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto" }}>
+                      <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
                         <Grid item xs={4.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.nome}
@@ -148,11 +156,11 @@ function Login() {
                             fullWidth
                             disabled={continuar}
                             inputMask={{ mask: '', }}
-                            
+
                           />
                         </Grid>
                         <Grid item xs={4.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.sobrenome}
@@ -166,10 +174,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container justifyContent="space-around" style={{margin: "0 auto"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
                         <Grid item xs={10.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.email}
@@ -183,10 +191,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container justifyContent="space-around" style={{margin: "0 auto"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
                         <Grid item xs={4.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.dataNascimento}
@@ -199,7 +207,7 @@ function Login() {
                           />
                         </Grid>
                         <Grid item xs={4.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.cpf}
@@ -214,10 +222,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container justifyContent="space-around" style={{margin: "0 auto"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
                         <Grid item xs={10.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.senha}
@@ -231,10 +239,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container justifyContent="space-around" style={{margin: "0 auto"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
                         <Grid item xs={10.5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.telefone}
@@ -249,13 +257,13 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{marginTop: 20}}>
-                      <Grid container style={{padding: "0 80px"}} justifyContent="flex-end">
+                    <Grid item xs={12} style={{ marginTop: 20 }}>
+                      <Grid container style={{ padding: "0 80px" }} justifyContent="flex-end">
                         <Grid item xs={2}>
                           <ButtonRegister
                             variant="outlined"
                             text="Continuar"
-                            onClick={()=>setContinuar(true)}
+                            onClick={() => setContinuar(true)}
                             disabled={continuar}
                           />
                         </Grid>
@@ -266,22 +274,22 @@ function Login() {
                   </Grid>
                 </Grid>
 
-                <div style={{width: 2, height: 500, backgroundColor: "white", marginBottom: 30, marginTop: 30}}></div>
+                <div style={{ width: 2, height: 500, backgroundColor: "white", marginBottom: 30, marginTop: 30 }}></div>
 
                 <Grid item xs={5.95} >
                   <Grid container>
                     <Grid item xs={12}>
-                      <Grid container style={{justifyContent: "center"}}>
+                      <Grid container style={{ justifyContent: "center" }}>
                         <Grid item>
                           <SubTituloCadastro>Endereço</SubTituloCadastro>
                         </Grid>
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto"}}>
-                      <Grid container style={{margin: "0 auto", padding: "0 40px"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto" }}>
+                      <Grid container style={{ margin: "0 auto", padding: "0 40px" }}>
                         <Grid item xs={5}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.cep}
@@ -289,7 +297,7 @@ function Login() {
                             control={control}
                             label="CEP"
                             fullWidth
-                            onBlur={ () => buscaCep() }
+                            onBlur={() => buscaCep()}
                             disabled={!continuar}
                           />
                         </Grid>
@@ -297,10 +305,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container justifyContent="space-between" style={{margin: "0 auto", padding: "0 40px"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container justifyContent="space-between" style={{ margin: "0 auto", padding: "0 40px" }}>
                         <Grid item xs={7}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.cidade}
@@ -312,7 +320,7 @@ function Login() {
                           />
                         </Grid>
                         <Grid item xs={4}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.estado}
@@ -326,10 +334,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container style={{margin: "0 auto", padding: "0 40px"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container style={{ margin: "0 auto", padding: "0 40px" }}>
                         <Grid item xs={12}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.rua}
@@ -343,10 +351,10 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: 20}}>
-                      <Grid container justifyContent="space-between" style={{margin: "0 auto", padding: "0 40px"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: 20 }}>
+                      <Grid container justifyContent="space-between" style={{ margin: "0 auto", padding: "0 40px" }}>
                         <Grid item xs={4}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.numero}
@@ -359,7 +367,7 @@ function Login() {
                           />
                         </Grid>
                         <Grid item xs={7}>
-                          <TextFieldComponent 
+                          <TextFieldComponent
                             id="standard-basic"
                             variant="standard"
                             defaultValue={usuario.bairro}
@@ -373,18 +381,18 @@ function Login() {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12} style={{margin: "0 auto", marginTop: "14.4%"}}>
-                      <Grid container justifyContent="space-between" style={{margin: "0 auto", padding: "0 40px"}}>
+                    <Grid item xs={12} style={{ margin: "0 auto", marginTop: "14.4%" }}>
+                      <Grid container justifyContent="space-between" style={{ margin: "0 auto", padding: "0 40px" }}>
                         <Grid item xs={6}>
                           <ButtonRegister
                             variant="outlined"
                             text="Voltar"
-                            onClick={()=>setContinuar(false)}
+                            onClick={() => setContinuar(false)}
                             disabled={!continuar}
                           />
                         </Grid>
                         <Grid item xs={6}>
-                          <Grid container justifyContent="flex-end" style={{margin: "0 auto", padding: "0 40px"}}>
+                          <Grid container justifyContent="flex-end" style={{ margin: "0 auto", padding: "0 40px" }}>
                             <Grid item xs={5}>
                               <ButtonRegister
                                 variant="outlined"
@@ -394,11 +402,11 @@ function Login() {
                               />
                             </Grid>
                           </Grid>
-                          
+
                         </Grid>
                       </Grid>
                     </Grid>
-                    
+
                   </Grid>
                 </Grid>
 
@@ -407,9 +415,9 @@ function Login() {
 
             </Grid>
           </ContainerGrid>
-          </form>
+        </form>
       }
-      
+
       <Img src={camp} alt="camp" ></Img>
 
 

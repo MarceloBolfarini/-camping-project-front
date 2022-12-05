@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Checkbox, Grid } from '@mui/material';
 import Header from "../../Components/Header";
 import BackGroundPage from "../../Components/BackgroundPage";
 import { InputTitle, Title } from './style';
@@ -64,7 +64,7 @@ const ListaInscritos = () => {
     const [titulo, setTitulo] = useState([]);
 
     const loadEvent = async () => (
-        await axios.get('http://localhost:8080/eventos/' + id, {})
+        await api.get('http://localhost:8080/eventos/' + id, {})
             .then((response) => {
                 setEvento(response.data.inscritos);
                 setTitulo(response.data.titulo);
@@ -76,6 +76,21 @@ const ListaInscritos = () => {
         await loadEvent();
         console.log(evento)
     }, [])
+
+    const confirmaPagamento = async (idInscrito) => {
+        await api.put('http://localhost:8080/eventos/pagamento/evento/'+id+'/usuario/'+idInscrito, {})
+        .then((response) => {
+            console.log(response)
+        }).catch(console.log)
+    }
+
+    const removerInscricao = async (idInscrito) => {
+        await api.put('http://localhost:8080/eventos/removerInscricao/evento/'+id+'/usuario/'+idInscrito, {})
+        .then((response) => {
+            console.log(response)
+            loadEvent();
+        }).catch(console.log)
+    }
 
     const exportPDF = () => {
         const unit = "pt";
@@ -129,6 +144,8 @@ const ListaInscritos = () => {
                                                 <StyledTableCell align="right">Telefone</StyledTableCell>
                                                 <StyledTableCell align="right">Cidade</StyledTableCell>
                                                 <StyledTableCell align="right">Estado</StyledTableCell>
+                                                <StyledTableCell align="right">Pagamento</StyledTableCell>
+                                                <StyledTableCell align="right">Remover Inscrição</StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -139,6 +156,8 @@ const ListaInscritos = () => {
                                                     <StyledTableCell align="right" >{inscrito?.telefone}</StyledTableCell>
                                                     <StyledTableCell align="right" >{inscrito?.cidade}</StyledTableCell>
                                                     <StyledTableCell align="right" >{inscrito?.estado}</StyledTableCell>
+                                                    <StyledTableCell align="right" ><Checkbox style={{color: "white"}} onChange={() => confirmaPagamento(inscrito?.id)} defaultChecked={inscrito?.pagamento} ></Checkbox></StyledTableCell>
+                                                    <StyledTableCell align="right" ><Icon style={{cursor: "pointer"}} onClick={() => removerInscricao(inscrito?.id)} icon="material-symbols:delete-outline" color="white" fontSize={25} /></StyledTableCell>
                                                 </StyledTableRow>
                                             )}
                                         </TableBody>
@@ -147,7 +166,7 @@ const ListaInscritos = () => {
 
                                 <Grid item xs={12} style={{ display: "flex" }} justifyContent="center" onClick={() => exportPDF()}>
                                     <h4 style={{ color: "white" }} >Imprimir: </h4>
-                                    <Icon style={{marginTop: "25px", marginLeft: "10px" }} icon="fontisto:print" color="white" fontSize={18}  />
+                                    <Icon style={{marginTop: "25px", marginLeft: "10px", cursor: "pointer" }} icon="fontisto:print" color="white" fontSize={18}  />
                                 </Grid>
 
                             </Grid>

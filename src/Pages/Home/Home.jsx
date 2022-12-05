@@ -16,6 +16,7 @@ const Home = () => {
   const [eventoSelecionado, setEventoSelecionado] = useState({});
   const [usuario, setUsuario] = useState({});
   const { isAuthenticated } = useSelector(state => state.auth)
+  const [loading, setLoading] = useState(true)
 
   const Toast = Swal.mixin({
     toast: true,
@@ -87,6 +88,7 @@ const Home = () => {
       ),
       localStorage.setItem("autenticado", 1)
     }
+    setLoading(false)
   }, [])
 
   const openModal = async() => {
@@ -230,6 +232,8 @@ const Home = () => {
                       variant="outlined"
                       text="Inscreva-se"
                       type="submit"
+                      disabled={eventoSelecionado.inscritos.find((inscritos) => inscritos.id == usuario.id) ? true : false}
+                      //color={eventoSelecionado?.inscritos?.find((inscritos) => inscritos.id == usuario.id) ? 'grey' : undefined}
                       bottaoCadEventos
                       onClick={openModal}
                     />

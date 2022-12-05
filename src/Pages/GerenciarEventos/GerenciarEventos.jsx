@@ -195,7 +195,7 @@ const GerenciarEventos = () => {
                           <StyledTableCell align="right" onClick={() => openModal(evento.id, evento.titulo)}>{evento?.taxaInscricao}</StyledTableCell>
                           <StyledTableCell align="right" onClick={() => openModal(evento.id, evento.titulo)}>{evento?.idadeMinima}</StyledTableCell>
                           <StyledTableCell align="right" onClick={() => openModal(evento.id, evento.titulo)}>{evento?.inscritos.length}</StyledTableCell>
-                          <StyledTableCell align="right" onClick={() => window.location.pathname = "/eventos/gerenciar/lista/" + evento.id}><Icon icon="fontisto:file-1" color='white' fontSize="20px"></Icon></StyledTableCell>
+                          <StyledTableCell align="right" onClick={() => window.location.pathname = "/eventos/gerenciar/lista/" + evento.id}><Icon icon="fontisto:file-1" style={{cursor: "pointer"}} color='white' fontSize="20px"></Icon></StyledTableCell>
                         </StyledTableRow>
                       )}
                     </TableBody>
@@ -204,7 +204,7 @@ const GerenciarEventos = () => {
 
                 <Grid item xs={12} style={{ display: "flex" }} justifyContent="center" onClick={() => exportPDF()}>
                   <h4 style={{ color: "white" }} >Imprimir: </h4>
-                  <Icon style={{ marginTop: "25px", marginLeft: "10px" }} icon="fontisto:print" color="white" fontSize={18} />
+                  <Icon style={{ marginTop: "25px", marginLeft: "10px", cursor: "pointer" }} icon="fontisto:print" color="white" fontSize={18} />
                 </Grid>
 
               </Grid>
