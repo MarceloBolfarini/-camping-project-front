@@ -60,7 +60,9 @@ function Login() {
     setUsuario({ ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email, 
     dataNascimento: dataForm, senha: event.senha, telefone: event.telefone, numero: event.numero})
     console.log(usuario)
-    await api.post("/usuarios", usuario).then((response)=> {
+
+    let parserdValues = {...event, dataNascimento: dataForm}
+    await api.post("/usuarios", parserdValues).then((response)=> {
       setUsuario({});
       console.log(response)
       return (

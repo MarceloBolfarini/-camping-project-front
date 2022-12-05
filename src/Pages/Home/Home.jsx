@@ -16,6 +16,7 @@ const Home = () => {
   const [eventoSelecionado, setEventoSelecionado] = useState({});
   const [usuario, setUsuario] = useState({});
   const { isAuthenticated } = useSelector(state => state.auth)
+  
 
   const Toast = Swal.mixin({
     toast: true,
@@ -76,7 +77,7 @@ const Home = () => {
     console.log(eventos)
     setUsuario(JSON.parse(localStorage.getItem('usuario')));
     console.log(usuario);
-    if(isAuthenticated && localStorage.getItem("autenticado") == 0){
+    if(isAuthenticated){
       return(
         Toast.fire({
           icon: 'success',
@@ -84,8 +85,7 @@ const Home = () => {
           color: "white",
           iconColor: "#FFFFFF"
         })
-      ),
-      localStorage.setItem("autenticado", 1)
+      )
     }
   }, [])
 
