@@ -133,7 +133,7 @@ export const CadastroEvento = ({}) => {
               
             <Title>{window.location.href === "http://localhost:3000/eventos/cadastrar" ? "Cadastrar Evento" : "Alterar Evento"}</Title>
           </Grid>
-          { loading ? "" : (
+          { !loading || !id ?  (
           <Grid item xs={12} style={{ margin: "0 auto" }}>
             <Grid container justifyContent="space-around" style={{ margin: "0 auto" }}>
               <Grid item xs={6}>
@@ -258,7 +258,7 @@ export const CadastroEvento = ({}) => {
               </Grid>
             </Grid>
           </Grid>
-          )}
+          ): ""}
         </Grid>
       }></BackGroundPage>
     </>
