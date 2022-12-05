@@ -87,6 +87,11 @@ function Login() {
         title: "Ocorreu um erro"
       })
     )
+      
+    setTimeout(() => {
+      window.history.back();
+    }, 500);
+
   }
 
   const buscaCep = () => {

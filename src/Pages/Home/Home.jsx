@@ -234,7 +234,6 @@ const Home = () => {
                       text="Inscreva-se"
                       type="submit"
                       disabled={eventoSelecionado.inscritos.find((inscritos) => inscritos.id == usuario.id) ? true : false}
-                      //color={eventoSelecionado?.inscritos?.find((inscritos) => inscritos.id == usuario.id) ? 'grey' : undefined}
                       bottaoCadEventos
                       onClick={openModal}
                     />

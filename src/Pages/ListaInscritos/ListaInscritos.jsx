@@ -103,9 +103,9 @@ const ListaInscritos = () => {
         doc.setFontSize(15);
 
         const title = titulo;
-        const headers = [["Nome", "Email", "Telefone", "Cidade", "Estado"]];
+        const headers = [["Nome", "Email", "Telefone", "Cidade", "Estado", "Pagamento"]];
 
-        const data = evento.map(pdf => [pdf.nome + " " + pdf.sobrenome, pdf.email, pdf.telefone, pdf.cidade, pdf.estado]);
+        const data = evento.map(pdf => [pdf.nome + " " + pdf.sobrenome, pdf.email, pdf.telefone, pdf.cidade, pdf.estado, pdf.pagamento == true ? "OK" : "Pendente"]);
 
         let content = {
             startY: 50,
