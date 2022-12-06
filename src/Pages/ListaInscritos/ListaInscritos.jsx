@@ -81,6 +81,7 @@ const ListaInscritos = () => {
         await api.put('http://localhost:8080/eventos/pagamento/evento/'+id+'/usuario/'+idInscrito, {})
         .then((response) => {
             console.log(response)
+            loadEvent();
         }).catch(console.log)
     }
 
