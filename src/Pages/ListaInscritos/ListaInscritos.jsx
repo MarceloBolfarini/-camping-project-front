@@ -93,6 +93,31 @@ const ListaInscritos = () => {
         }).catch(console.log)
     }
 
+    const openModal = async (id, nome, sobrenome) => {
+        return Swal.fire({
+          title: nome && sobrenome ? "Você deseja remover a inscrição do usuário: "+ nome +" "+ sobrenome + "?" : "Usuário Selecionado",
+          color: "white",
+          showCancelButton: true,
+          style: "&.swal2-styled.swal2-confirm {background: white !important}",
+          confirmButtonText: "Sim",
+          cancelButtonColor: "#313131",
+          cancelButtonText: "Não",
+          background: "#414141",
+          border: "1px solid #FFFFFF",
+          customClass: {
+            confirmButton: 'btn-class' //insert class here
+          }
+    
+        }).then((result) => {
+          if (result.isConfirmed) {
+           removerInscricao(id)
+          }
+          if (result.dismiss) {
+            loadEvent()
+          }
+        })
+      }
+
     const exportPDF = () => {
         const unit = "pt";
         const size = "A4"; // Use A1, A2, A3 or A4
@@ -158,7 +183,7 @@ const ListaInscritos = () => {
                                                     <StyledTableCell align="right" >{inscrito?.cidade}</StyledTableCell>
                                                     <StyledTableCell align="right" >{inscrito?.estado}</StyledTableCell>
                                                     <StyledTableCell align="right" ><Checkbox style={{color: "white"}} onChange={() => confirmaPagamento(inscrito?.id)} defaultChecked={inscrito?.pagamento} ></Checkbox></StyledTableCell>
-                                                    <StyledTableCell align="right" ><Icon style={{cursor: "pointer"}} onClick={() => removerInscricao(inscrito?.id)} icon="material-symbols:delete-outline" color="white" fontSize={25} /></StyledTableCell>
+                                                    <StyledTableCell align="right" ><Icon style={{cursor: "pointer"}} onClick={() => openModal(inscrito?.id, inscrito?.nome, inscrito?.sobrenome)} icon="material-symbols:delete-outline" color="white" fontSize={25} /></StyledTableCell>
                                                 </StyledTableRow>
                                             )}
                                         </TableBody>

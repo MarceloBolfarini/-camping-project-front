@@ -17,6 +17,7 @@ const Home = () => {
   const [usuario, setUsuario] = useState({});
   const { isAuthenticated } = useSelector(state => state.auth)
   const [loading, setLoading] = useState(true)
+  const [idadeMinima, setIdadeMinima] = useState();
 
   const Toast = Swal.mixin({
     toast: true,
@@ -39,47 +40,53 @@ const Home = () => {
       }).catch(console.log)
   )
 
-  const inscreverse = async () => (
-    await api.put(`/eventos/inscricao/evento/${eventoSelecionado.id}/usuario/${usuario.id}`, {})
-      .then((response)=>{
-        console.log(response)
-        return (
-          Swal.fire({
-            icon: "success",
-            title: "Você se inscreveu com sucesso no Acampamento: "+ eventoSelecionado.titulo,
-            showClass: {
-              popup: 'animate__animated animate__fadeInDown' 
-            },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
-            }
-          })
-        )
-      }).catch(err => {
-        console.log(err)
-        return (
-          Swal.fire({
-            icon: "error",
-            title: "Você já está inscrito nesse Acampamento",
-            showClass: {
-              popup: 'animate__animated animate__fadeInDown' 
-            },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
-            }
-          })
-        )
-      })
-  )
+  const inscreverse = async () => {
+    if (splitData(usuario.dataNascimento) == true) {
+      return (
+        await api.put(`/eventos/inscricao/evento/${eventoSelecionado.id}/usuario/${usuario.id}`, {})
+          .then((response) => {
+            console.log(response)
+            return (
+              Swal.fire({
+                icon: "success",
+                title: "Você se inscreveu com sucesso no Acampamento: " + eventoSelecionado.titulo,
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp'
+                }
+              })
+            )
+          }).catch(err => {
+            console.log(err)
+            return (
+              Swal.fire({
+                icon: "error",
+                title: "Você já está inscrito nesse Acampamento",
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp'
+                }
+              })
+            )
+          }),
+        loadEvents(),
+        setEventoSelecionado({})
+      )
+    }
+  }
 
   useEffect(async () => {
     await loadEvents();
     console.log(eventos)
     setUsuario(JSON.parse(localStorage.getItem('usuario')));
     console.log(usuario);
-    if(isAuthenticated && localStorage.getItem("autenticado") == 0){
+    if (isAuthenticated && localStorage.getItem("autenticado") == 0) {
       localStorage.setItem("autenticado", 1)
-      return(
+      return (
         Toast.fire({
           icon: 'success',
           title: 'você está autenticado',
@@ -89,11 +96,11 @@ const Home = () => {
       )
     }
     setLoading(false)
-    
+
   }, [])
- 
-  const openModal = async() => {
-   return Swal.fire({
+
+  const openModal = async () => {
+    return Swal.fire({
       title: 'Você está se inscrevendo no evento',
       text: eventoSelecionado.titulo,
       color: "white",
@@ -108,11 +115,50 @@ const Home = () => {
         confirmButton: 'btn-class' //insert class here
       }
 
-  }).then((result) => {
-      if(result.isConfirmed){
+    }).then((result) => {
+      if (result.isConfirmed) {
         inscreverse()
       }
-  })
+    })
+  }
+
+  function splitData(data) {
+    let datas = data.split("/");
+    return idade(datas[2], datas[1], datas[0]);
+  }
+
+  function idade(ano_aniversario, mes_aniversario, dia_aniversario) {
+    var d = new Date,
+      ano_atual = d.getFullYear(),
+      mes_atual = d.getMonth() + 1,
+      dia_atual = d.getDate(),
+
+      ano_aniversario = +ano_aniversario,
+      mes_aniversario = +mes_aniversario,
+      dia_aniversario = +dia_aniversario,
+
+      quantos_anos = ano_atual - ano_aniversario;
+
+    if (mes_atual < mes_aniversario || mes_atual == mes_aniversario && dia_atual < dia_aniversario) {
+      quantos_anos--;
+    }
+
+    if (quantos_anos < eventoSelecionado.idadeMinima) {
+      return (
+        Swal.fire({
+          icon: "error",
+          title: "Você não tem a idade mínima necessária para participar deste evento! ",
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        })
+      )
+    }
+
+    return true;
   }
 
   return (
@@ -121,15 +167,15 @@ const Home = () => {
       <BackGroundPage page={
         <Grid container justifyContent="center">
           <Grid item xs={4} style={{ display: "flex", marginTop: 10 }} justifyContent="center">
-            { eventoSelecionado.id &&  
-            <Grid position="absolute" left="16%" top="12.5%" onClick={ ()=>setEventoSelecionado({}) } style={{ cursor: "pointer"  }}>
-              <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
-            </Grid> 
+            {eventoSelecionado.id &&
+              <Grid position="absolute" left="16%" top="12.5%" onClick={() => setEventoSelecionado({})} style={{ cursor: "pointer" }}>
+                <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
+              </Grid>
             }
-            { (usuario.nivelAcesso == 0 && eventoSelecionado.id == undefined) &&  
-            <Grid position="absolute" right="16%" top="12.5%" onClick={()=> window.location.pathname = "/eventos/cadastrar"} style={{cursor: "pointer"}}>
-              <Icon icon="carbon:add-alt" color="white" fontSize={40} style />
-            </Grid> 
+            {(usuario.nivelAcesso == 0 && eventoSelecionado.id == undefined) &&
+              <Grid position="absolute" right="16%" top="12.5%" onClick={() => window.location.pathname = "/eventos/cadastrar"} style={{ cursor: "pointer" }}>
+                <Icon icon="carbon:add-alt" color="white" fontSize={40} style />
+              </Grid>
             }
             <Title>{eventoSelecionado.titulo == undefined ? "Eventos" : eventoSelecionado.titulo}</Title>
           </Grid>
@@ -163,7 +209,7 @@ const Home = () => {
             <>
               <Grid item xs={12} style={{ padding: "0 20%" }}>
                 <Grid container >
-                  <Grid item xs={8} style={{height: 200, borderRadius: 10}}>
+                  <Grid item xs={8} style={{ height: 200, borderRadius: 10 }}>
                     <Imagem style={{ borderRadius: "10px", width: "90%", height: "120%", boxShadow: "-4px 4px 4px rgba(0, 0, 0, 0.50)" }} src={"http://localhost:8080/eventos/recuperarImagem/" + eventoSelecionado.caminhoImagem} />
                   </Grid>
                   <Grid item xs={4}>
@@ -217,7 +263,7 @@ const Home = () => {
                         </SubDescriptionCard>
                       </Grid>
                       <Grid item xs={3}>
-                        <SubTitleCard style={{float: 'right', display: "flex"}}>
+                        <SubTitleCard style={{ float: 'right', display: "flex" }}>
                           Idade mínima:
                         </SubTitleCard>
                         <SubDescriptionCard>
@@ -225,10 +271,10 @@ const Home = () => {
                         </SubDescriptionCard>
                       </Grid>
                     </Grid>
-                    
+
 
                   </Grid>
-                  <Grid item xs={12} style={{display: "flex", justifyContent:"center", marginTop: 30}}>
+                  <Grid item xs={12} style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
                     <ButtonRegister
                       variant="outlined"
                       text="Inscreva-se"

@@ -54,8 +54,9 @@ export const CadastroEvento = ({}) => {
   const cadastrar = async (event) => {
 
     console.log(event)
+    console.log(file)
 
-    if(file != {}){
+    if(file.name != undefined){
       let formData = new FormData()
       formData.append("file", file)
       await api.post("/eventos/salvarImagem", formData ,{
