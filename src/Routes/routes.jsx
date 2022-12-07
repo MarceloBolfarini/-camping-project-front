@@ -10,6 +10,8 @@ import CadastroEvento from "../Pages/CadastroEvento/CadastroEvento.jsx";
 import GerenciarEventos from "../Pages/GerenciarEventos/GerenciarEventos.jsx";
 import MeusEventos from "../Pages/MeusEventos/MeusEventos.jsx";
 import ListaInscritos from "../Pages/ListaInscritos/ListaInscritos.jsx";
+import EnvioEmail from "../Pages/RecuperarSenha/EnvioEmail.jsx";
+import RecuperarSenha from "../Pages/RecuperarSenha/RecuperarSenha.jsx";
 
 
 export const Rotas = () =>{
@@ -25,6 +27,8 @@ export const Rotas = () =>{
                         <Route path="/eventos/gerenciar" element={<RequireAuth><GerenciarEventos/></RequireAuth>} />
                         <Route path="/eventos/meusEventos" element={<RequireAuth><MeusEventos/></RequireAuth>} />
                         <Route path="/eventos/gerenciar/lista/:id" element={<RequireAuth><ListaInscritos/></RequireAuth>} />
+                        <Route path="/enviarEmail" element={<EnvioEmail/>} />
+                        <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
                         <Route path="*" element={<NotFound/>} />
                     </Routes>
                 </BrowserRouter>

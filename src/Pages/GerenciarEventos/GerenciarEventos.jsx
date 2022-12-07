@@ -111,11 +111,11 @@ const GerenciarEventos = () => {
     return Swal.fire({
       title: titulo ? titulo : "Acampamento Selecionado",
       color: "white",
-      showCancelButton: true,
+      showDenyButton: true,
       style: "&.swal2-styled.swal2-confirm {background: white !important}",
       confirmButtonText: "Excluir",
-      cancelButtonColor: "#313131",
-      cancelButtonText: "Alterar",
+      denyButtonColor: "#313131",
+      denyButtonText: "Alterar",
       background: "#414141",
       border: "1px solid #FFFFFF",
       customClass: {
@@ -126,7 +126,7 @@ const GerenciarEventos = () => {
       if (result.isConfirmed) {
         excluirEvento(id)
       }
-      if (result.dismiss) {
+      if (result.isDenied) {
         window.location.pathname = "/eventos/editar/" + id
       }
     })
