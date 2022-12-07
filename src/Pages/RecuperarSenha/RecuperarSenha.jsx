@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Swal from 'sweetalert2';
 import camp from '../../img/camp.png'
 import { api } from '../../services/api';
 import { Button, ContainerPrincipal, Img, Input, TelaLogin } from './style';
@@ -7,17 +8,57 @@ import { Button, ContainerPrincipal, Img, Input, TelaLogin } from './style';
 
 function RecuperarSenha() {
 
-    const [email, setEmail] = useState({
-        para: '',
-        titulo: '',
-        conteudo: ''
-    });
+    const [email, setEmail] = useState();
+    const [novaSenha, setNovaSenha] = useState();
+    const [confirmaSenha, setConfirmaSenha] = useState();
 
-    const enviarEmail = async () => {
-        await api.post("/usuarios/enviarEmail", email).then((res) => {
-            console.log(res);
-        })
+    useEffect(async () => {
+        await setEmail(localStorage.getItem("email"));
+    }, [])
 
+    const handleSubmitNovaSenha = async (event) => {
+        event.preventDefault();
+        await redefinirSenha();
+    }
+
+    const redefinirSenha = async () => {
+
+        if (novaSenha != confirmaSenha) {
+            return (
+                Swal.fire({
+                    icon: "error",
+                    title: "As senhas são diferentes!",
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                })
+            )
+
+        } else {
+
+            let form = { email: email, senha: novaSenha };
+
+            await api.put("/usuarios/recuperarSenha", form).then((res) => {
+                
+                localStorage.removeItem("email");
+
+                return (
+                    Swal.fire({
+                        icon: "sucess",
+                        title: "Senha alterada com sucesso!",
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp'
+                        }
+                    })
+                )
+            })
+        }
     }
 
     return (
@@ -25,17 +66,14 @@ function RecuperarSenha() {
 
             <TelaLogin>
                 <div>
-                    <h1>Digite seu email.</h1>
+                    <h1>Digite sua senha nova.</h1>
                     <br></br> <br></br>
-                    <form>
-                        <Input type="email" placeholder="Email" name="email"
-                            onChange={(event) => setEmail({
-                                para: event.target.value,
-                                titulo: "Redefinição de Senha Acamp",
-                                conteudo: "Clique no Link para redefinir sua senha: <a href='http://localhost:3000/recuperarsenha?email=" + event.target.value + "'> Redefinir </a>"
-                            })}></Input>
+                    <form onSubmit={handleSubmitNovaSenha}>
+                        <Input type="password" placeholder="Nova Senha"  onChange={(event) => setNovaSenha(event.target.value)}></Input>
                         <br></br> <br></br>
-                        <Button onClick={enviarEmail}>Enviar</Button>
+                        <Input type="password" placeholder="Confirme a senha"  onChange={(event) => setConfirmaSenha(event.target.value)}></Input>
+                        <br></br> <br></br>
+                        <Button>Salvar</Button>
                     </form>
                 </div>
             </TelaLogin>

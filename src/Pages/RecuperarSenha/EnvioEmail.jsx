@@ -14,6 +14,7 @@ function EnvioEmail() {
     });
 
     const enviarEmail = async () => {
+        localStorage.setItem("email", email.para)
         await api.post("/usuarios/enviarEmail", email).then((res) => {
             console.log(res);
         })
@@ -32,7 +33,7 @@ function EnvioEmail() {
                             onChange={(event) => setEmail({
                                 para: event.target.value,
                                 titulo: "Redefinição de Senha Acamp",
-                                conteudo: "Clique no Link para redefinir sua senha: <a href='http://localhost:3000/recuperarSenha?email=" + event.target.value + "'> Redefinir </a>"
+                                conteudo: "Clique no Link para redefinir sua senha: <a href='http://localhost:3000/recuperarSenha'> Redefinir </a>"
                             })}></Input>
                         <br></br> <br></br>
                         <Button onClick={enviarEmail}>Enviar</Button>
