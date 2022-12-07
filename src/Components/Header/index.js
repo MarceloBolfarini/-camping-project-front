@@ -51,7 +51,7 @@ const Header = () => {
                             <Grid item xs={2} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
                                 <ItemsMenu onClick={()=>window.location.pathname = "/home"}>Eventos</ItemsMenu>
                             </Grid>
-                            <Grid item xs={2} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
+                            <Grid item xs={3} style={{display:"flex", justifyContent:"center", marginTop: "-0.4%"}}>
                                 <ItemsMenu onClick={()=>window.location.pathname = "/eventos/meusEventos"}>Meus Eventos</ItemsMenu>
                             </Grid>
                             { userAdmin &&
