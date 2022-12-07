@@ -119,7 +119,7 @@ function Login() {
               <Input type="password" placeholder="Senha" name="senha" onChange={(event) => setForm({ ...form, senha: event.target.value })} value={form.senha}></Input>
               <br></br> <br></br>
               <Button>Enviar</Button>
-              <div style={{ marginTop: 10, fontSize: "13px" }}><ButtonCadastrese onClick={() => window.location.pathname = "/recuperarsenha"}>Esqueceu a senha?</ButtonCadastrese></div>
+              <div style={{ marginTop: 10, fontSize: "13px" }}><ButtonCadastrese onClick={() => window.location.pathname = "/enviarEmail"}>Esqueceu a senha?</ButtonCadastrese></div>
               <div style={{ marginTop: 50, fontSize: "16px" }}><ButtonCadastrese onClick={() => setExibeLogin(false)}>Cadastre-se</ButtonCadastrese></div>
             </form>
           </div>
