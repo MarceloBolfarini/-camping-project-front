@@ -18,6 +18,7 @@ const Home = () => {
   const { isAuthenticated } = useSelector(state => state.auth)
   const [loading, setLoading] = useState(true)
   const [idadeMinima, setIdadeMinima] = useState();
+ 
 
   const Toast = Swal.mixin({
     toast: true,
@@ -40,12 +41,36 @@ const Home = () => {
       }).catch(console.log)
   )
 
+  const enviarEmail = async () => {
+    let emailUsuario = JSON.parse(localStorage.getItem("usuario"))?.email;
+    let emails = {para: emailUsuario,
+                  titulo: "Você se inscreveu com sucesso no evento: " + eventoSelecionado.titulo,
+                  conteudo: "<h2>Nossos Contatos:</h2>"+
+                        "Av. Dom Antonio, 274"+"</br>"+
+                        "Vila Glória - Assis-SP"+"</br>"+
+                        "contato@icasadeadoracao.com"+"</br>"+
+                        "Tel +55 (18) 3321 1790"+"<br>"+"<br>"+"</br>"+
+                        "<h2>Dados para efetuar o pagamento</h2>"+"</br>"+
+                        "Conta Bancaria Casa de Adoração"+"</br>"+
+                        "BANCO SANTANDER"+"</br>"+
+                        "Agencia 0092"+"</br>"+
+                        "Conta corrente 13006877-3"+"</br>"+
+                        "CNPJ 12.302.130/0001-68 Pix"+"</br>"+
+                        "Igreja Apostólica Casa de Adoração"};
+
+    await api.post("/usuarios/enviarEmail", emails).then((res) => {
+      console.log(res);
+    })
+
+  }
+
   const inscreverse = async () => {
     if (splitData(usuario.dataNascimento) == true) {
       return (
         await api.put(`/eventos/inscricao/evento/${eventoSelecionado.id}/usuario/${usuario.id}`, {})
           .then((response) => {
             console.log(response)
+            enviarEmail()
             return (
               Swal.fire({
                 icon: "success",

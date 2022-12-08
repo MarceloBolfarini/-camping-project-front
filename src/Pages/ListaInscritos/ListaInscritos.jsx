@@ -66,7 +66,11 @@ const ListaInscritos = () => {
     const loadEvent = async () => (
         await api.get('http://localhost:8080/eventos/' + id, {})
             .then((response) => {
-                setEvento(response.data.inscritos);
+                setEvento(response.data.inscritos.sort(
+                    function(a,b){
+                        return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+                    }
+                ));
                 setTitulo(response.data.titulo);
                 console.log(response)
             }).catch(console.log)
