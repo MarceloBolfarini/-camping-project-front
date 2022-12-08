@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Home from "../Pages/Home/Home.jsx";
 import Login from "../Pages/Login/Login"
@@ -16,20 +16,23 @@ import RecuperarSenha from "../Pages/RecuperarSenha/RecuperarSenha.jsx";
 
 export const Rotas = () =>{
 
+    
+
     return (
         <ThemeProvider theme={theme}>
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Login/>} />
+                        <Route path="/login" element={<Login/>} />
                         <Route path="/home" element={<RequireAuth><Home/></RequireAuth>} />
-                        <Route path="/eventos/cadastrar" element={<RequireAuth><CadastroEvento/></RequireAuth>} />
-                        <Route path="/eventos/editar/:id" element={<RequireAuth><CadastroEvento/></RequireAuth>} />
-                        <Route path="/eventos/gerenciar" element={<RequireAuth><GerenciarEventos/></RequireAuth>} />
+                        <Route path="/eventos/cadastrar" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><CadastroEvento/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
+                        <Route path="/eventos/editar/:id" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><CadastroEvento/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
+                        <Route path="/eventos/gerenciar" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><GerenciarEventos/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
                         <Route path="/eventos/meusEventos" element={<RequireAuth><MeusEventos/></RequireAuth>} />
-                        <Route path="/eventos/gerenciar/lista/:id" element={<RequireAuth><ListaInscritos/></RequireAuth>} />
+                        <Route path="/eventos/gerenciar/lista/:id" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><ListaInscritos/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
                         <Route path="/enviarEmail" element={<EnvioEmail/>} />
                         <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
-                        <Route path="*" element={<NotFound/>} />
+                        <Route path="*" element={<RequireAuth><Home/></RequireAuth>} />
                     </Routes>
                 </BrowserRouter>
         </ThemeProvider>
