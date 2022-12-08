@@ -166,7 +166,7 @@ const Home = () => {
       <Header></Header>
       <BackGroundPage page={
         <Grid container justifyContent="center">
-          <Grid item xs={4} style={{ display: "flex", marginTop: 10 }} justifyContent="center">
+          <Grid item xs={6} style={{ display: "flex", marginTop: 10 }} justifyContent="center">
             {eventoSelecionado.id &&
               <Grid position="absolute" left="16%" top="12.5%" onClick={() => setEventoSelecionado({})} style={{ cursor: "pointer" }}>
                 <Icon icon="icon-park-outline:return" color="white" fontSize={40} />
@@ -274,7 +274,7 @@ const Home = () => {
 
 
                   </Grid>
-                  <Grid item xs={12} style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
+                  <Grid item xs={12} style={{ display: "flex", justifyContent: "center", marginTop: 30, paddingBottom: "10%" }}>
                     <ButtonRegister
                       variant="outlined"
                       text="Inscreva-se"

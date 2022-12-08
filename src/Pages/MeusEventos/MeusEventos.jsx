@@ -197,7 +197,7 @@ function MeusEventos (){
                     </Grid>
                     
                   </Grid>
-                  <Grid item xs={12} style={{display: "flex", justifyContent:"center", marginTop: 30}}>
+                  <Grid item xs={12} style={{display: "flex", justifyContent:"center", marginTop: 30, paddingBottom: "10%"}}>
                     <ButtonRegister
                       variant="outlined"
                       text="Desinscreva-se"

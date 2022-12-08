@@ -164,7 +164,7 @@ const GerenciarEventos = () => {
       <Header></Header>
       <BackGroundPage page={
         <Grid container justifyContent="center">
-          <Grid item xs={4} style={{ display: "flex", marginTop: 40 }} justifyContent="center">
+          <Grid item xs={5} style={{ display: "flex", marginTop: 40 }} justifyContent="center">
             <Title>Gerenciamento de Eventos</Title>
           </Grid>
 
@@ -202,7 +202,7 @@ const GerenciarEventos = () => {
                   </Table>
                 </TableContainer>
 
-                <Grid item xs={12} style={{ display: "flex" }} justifyContent="center" onClick={() => exportPDF()}>
+                <Grid item xs={12} style={{ display: "flex", paddingBottom: "10%" }} justifyContent="center" onClick={() => exportPDF()}>
                   <h4 style={{ color: "white" }} >Imprimir: </h4>
                   <Icon style={{ marginTop: "25px", marginLeft: "10px", cursor: "pointer" }} icon="fontisto:print" color="white" fontSize={18} />
                 </Grid>

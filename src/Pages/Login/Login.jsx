@@ -58,11 +58,11 @@ function Login() {
   const cadastrar = async (event) => {
     let dataSplit = event.dataNascimento.split("/")
     let dataForm = dataSplit[2] + "-" + dataSplit[1] + "-" + dataSplit[0]
-    setUsuario({
-      ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email,
-      dataNascimento: dataForm, senha: event.senha, telefone: event.telefone, numero: event.numero
-    })
-    console.log(usuario)
+    // setUsuario({
+    //   ...usuario, nome: event.nome, sobrenome: event.sobrenome, cpf: event.cpf, email: event.email,
+    //   dataNascimento: dataForm, senha: event.senha, telefone: event.telefone, numero: event.numero
+    // })
+    // console.log(usuario)
 
     let parserdValues = {...event, dataNascimento: dataForm}
     await api.post("/usuarios", parserdValues).then((response)=> {
@@ -81,7 +81,7 @@ function Login() {
         })
       )
 
-    }).catch(
+    }).catch( err =>
       Swal.fire({
         icon: "error",
         title: "Ocorreu um erro"
@@ -94,8 +94,8 @@ function Login() {
 
   }
 
-  const buscaCep = () => {
-    fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json()).then(data => {
+  const buscaCep = async() => {
+    await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json()).then(data => {
       console.log(data)
       setUsuario({ ...usuario, bairro: data.bairro, cep: data.cep, cidade: data.localidade, estado: data.uf, rua: data.logradouro })
       setValue("cidade", data.localidade);
@@ -164,7 +164,7 @@ function Login() {
                             fullWidth
                             disabled={continuar}
                             inputMask={{ mask: '', }}
-
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 2, message: "Mínimo 2 caracteres."}}}
                           />
                         </Grid>
                         <Grid item xs={4.5}>
@@ -177,6 +177,7 @@ function Login() {
                             label="Sobrenome"
                             fullWidth
                             disabled={continuar}
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 2, message: "Mínimo 2 caracteres."}}}
                           />
                         </Grid>
                       </Grid>
@@ -194,6 +195,7 @@ function Login() {
                             label="Email"
                             fullWidth
                             disabled={continuar}
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 10, message: "Mínimo 10 caracteres."}}}
                           />
                         </Grid>
                       </Grid>
@@ -212,6 +214,7 @@ function Login() {
                             fullWidth
                             disabled={continuar}
                             inputMask={{ mask: '99/99/9999', maskChar: "", alwaysShowMask: false }}
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 10, message: "Mínimo 8 caracteres."}}}
                           />
                         </Grid>
                         <Grid item xs={4.5}>
@@ -225,6 +228,7 @@ function Login() {
                             fullWidth
                             disabled={continuar}
                             inputMask={{ mask: '999.999.999-99', maskChar: "", alwaysShowMask: false }}
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 14, message: "Mínimo 11 caracteres."}}}
                           />
                         </Grid>
                       </Grid>
@@ -242,6 +246,7 @@ function Login() {
                             label="Senha"
                             fullWidth
                             disabled={continuar}
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 6, message: "Mínimo 6 caracteres."}}}
                           />
                         </Grid>
                       </Grid>
@@ -260,6 +265,7 @@ function Login() {
                             fullWidth
                             disabled={continuar}
                             inputMask={{ mask: '(99) 99999-9999', maskChar: "", alwaysShowMask: false }}
+                            rules={{required: "Este campo é obrigatório.", minLength:{value: 15, message: "Mínimo 11 caracteres."}}}
                           />
                         </Grid>
                       </Grid>
@@ -307,6 +313,7 @@ function Login() {
                             fullWidth
                             onBlur={() => buscaCep()}
                             disabled={!continuar}
+                            inputMask={{ mask: '', maskChar: "", alwaysShowMask: false }}
                           />
                         </Grid>
                         <Grid item xs={7} />
