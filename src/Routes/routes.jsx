@@ -24,7 +24,7 @@ export const Rotas = () =>{
                     <Routes>
                         <Route path="/" element={<Login/>} />
                         <Route path="/login" element={<Login/>} />
-                        <Route path="/home" element={<RequireAuth><Home/></RequireAuth>} />
+                        <Route path="/home" element={<Home/>} />
                         <Route path="/eventos/cadastrar" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><CadastroEvento/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
                         <Route path="/eventos/editar/:id" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><CadastroEvento/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
                         <Route path="/eventos/gerenciar" element={JSON.parse(localStorage.getItem('usuario'))?.nivelAcesso == 0 ? <RequireAuth><GerenciarEventos/></RequireAuth> : <RequireAuth><Home/></RequireAuth>} />
